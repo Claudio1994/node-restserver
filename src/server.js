@@ -1,23 +1,23 @@
 //CONFIGURACIONES
-require('./config/config');
+require('./server/config/config');
 
 //LIBRERIAS
 const mongoose = require('mongoose');
 const express = require('express');
-const bodyParser = require('body-parser');
+const path = require('path');
+var bodyParser = require('body-parser')
 
 //INSTANCIAS
 const app = express();
 
-
 // parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }));
-
+app.use(bodyParser.urlencoded({ extended: false }))
+ 
 // parse application/json
-app.use(bodyParser.json());
+app.use(bodyParser.json())
 
 //UTILIZA LAS RUTAS CONFIGURADAS
-app.use(require('./routes/usuario'));
+app.use(require('./server/routes/index'));
 
 //CONECTAR BASE DE DATOS
 mongoose.connect(process.env.URLDB, { useNewUrlParser: true }, (err, res) => {
@@ -27,6 +27,9 @@ mongoose.connect(process.env.URLDB, { useNewUrlParser: true }, (err, res) => {
     console.log('Base de datos ONLINE!!');
 
 });
+
+// Archivos Estáticos
+app.use(express.static(path.join(__dirname, 'public')));
 
 //SERVIDOR
 app.listen(process.env.PORT, () => {
